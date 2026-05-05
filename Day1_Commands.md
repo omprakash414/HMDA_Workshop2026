@@ -1,10 +1,10 @@
-# 🧾 Metagenomics Workshop – Day 1 Practical (Linux Server)
+# Day 1 Commands
 
-This practical introduces the basic preprocessing steps in metagenomics analysis, including environment setup, quality control, trimming, and preparation for taxonomic classification.
+This practical introduces the basic preprocessing steps in metagenomics analysis, including environment setup, quality control, trimming, and taxonomic classification.
 
 ---
 
-## 📊 Workflow Overview
+## Workflow Overview
 
 ![Workflow](images/workflow.png)
 
