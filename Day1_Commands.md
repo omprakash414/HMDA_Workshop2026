@@ -189,8 +189,8 @@ done
 Assign taxonomy using a reference database.
 
 ### Requirement
-# download spingo as a zip file from https://github.com/GuyAllard/SPINGO# and then transfer it to the server, and then unzip it using unzip command
-# download the RDP database (16s reference database)
+- download spingo as a zip file from https://github.com/GuyAllard/SPINGO# and then transfer it to the server, and then unzip it using unzip command
+- download the RDP database (16s reference database)
 
 ```bash
 # Convert fastq.gz to fastq
