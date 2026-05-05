@@ -228,7 +228,8 @@ for f1 in *_R1_paired.fastq.gz; do
         -d /home/omprakash/spingo/SPINGO-master/database/RDP_11.2.species.fa \
         -p 60 \
         -i "${sample}.fasta" > "${sample}.spingo.out.txt"
-
+    
+    rm "${sample}.fastq" "${sample}.fasta"
     echo "Done with $sample."
 done
 ```
