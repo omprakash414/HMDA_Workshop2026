@@ -10,14 +10,14 @@ Processed Taxonomic Profile → Normalization → Diversity Analysis → Statist
 
 ---
 
-# 🔹 STEP 1: Processing Taxonomic Profile from SPINGO and Data Normalization
+## 🔹 STEP 1: Processing Taxonomic Profile from SPINGO and Data Normalization
 
-## Purpose
+### Purpose
 Merge all SPINGO output files into a single abundance matrix and normalize the species abundance profiles for downstream microbiome analysis.
 
 ---
 
-## Merge SPINGO Outputs into Abundance Matrix
+### Merge SPINGO Outputs into Abundance Matrix
 
 ### create a text file containing all the names of output files
 ```bash
