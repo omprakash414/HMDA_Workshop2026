@@ -4,13 +4,13 @@ This practical covers downstream microbiome analysis using processed taxonomic p
 
 ---
 
-# Workflow Overview
+## Workflow Overview
 
 Processed Taxonomic Profile → Normalization → Diversity Analysis → Statistical Testing → Visualization
 
 ---
 
-## 🔹 STEP 1: Processing Taxonomic Profile from SPINGO and Data Normalization
+### 🔹 STEP 1: Processing Taxonomic Profile from SPINGO and Data Normalization
 
 ### Purpose
 Merge all SPINGO output files into a single abundance matrix and normalize the species abundance profiles for downstream microbiome analysis.
@@ -19,49 +19,49 @@ Merge all SPINGO output files into a single abundance matrix and normalize the s
 
 ### Merge SPINGO Outputs into Abundance Matrix
 
-### create a text file containing all the names of output files
+#### create a text file containing all the names of output files
 ```bash
 ls *.spingo.out.txt > all_spingo_outputs.txt
 ```
 
-### Now give all_spingo_outputs.txt to a perl script which merge all the samples and create abundance profile (matrix)
+#### Now give all_spingo_outputs.txt to a perl script which merge all the samples and create abundance profile (matrix)
 ```bash
 perl /path_of_the_file/create_species_matrix.pl all_spingo_outputs.txt > Abundance_Profile.txt
 ```
 
-### Now see the brief view of the (matrix) created
+#### Now see the brief view of the (matrix) created
 ```bash
 head Abundance_Profile.txt
 ```
 
 ---
 
-## transfer Abundance_Profile.txt to laptop/local system
+### transfer Abundance_Profile.txt to laptop/local system
 
-### On your local system open command prompt (cmd)
+#### On your local system open command prompt (cmd)
 
-### Then open the new tab using Windows PowerShell and go in Downloads directory (cd Downloads/)
+#### Then open the new tab using Windows PowerShell and go in Downloads directory (cd Downloads/)
 ```bash
 cd Downloads/
 ```
 
-### transfer abundance profile from server to local system
+#### transfer abundance profile from server to local system
 ```bash
 scp -r user1@192.168.22.173:/Path_to_the_abundance_profile/Abundance_Profile.txt .
 ```
 
 ---
 
-# 🔹 STEP 2: Data Normalization in RStudio
+##🔹 STEP 2: Data Normalization in RStudio
 
-## Purpose
+### Purpose
 Import abundance matrix and metadata into RStudio and normalize the abundance profile.
 
 ---
 
-## Open the RStudio on your laptop/local system
+### Open the RStudio on your laptop/local system
 
-### Now Import the Abundance_Profile.txt using below command in RStudio
+#### Now Import the Abundance_Profile.txt using below command in RStudio
 ```r
 species_matrix <- read.delim(
   "C:/Users/ompra/Downloads/Abundance_Profile.txt",
@@ -71,7 +71,7 @@ species_matrix <- read.delim(
 
 ---
 
-## Import the metadata
+### Import the metadata
 ```r
 library(readxl)
 
@@ -80,33 +80,33 @@ metadata_df <- data.frame(
 )
 ```
 
-### Add rownames to the metadata dataframe
+#### Add rownames to the metadata dataframe
 ```r
 rownames(metadata_df) <- metadata_df$sampleID
 ```
 
 ---
 
-## Now we need to have same rownames in the species_matrix and metadata_df (patients matched)
+### Now we need to have same rownames in the species_matrix and metadata_df (patients matched)
 
-### Replace the '_' and everything after that with nothing ''
+#### Replace the '_' and everything after that with nothing ''
 ```r
 rownames(species_matrix) <- sub("_.*","",rownames(species_matrix))
 ```
 
-### Replace the starting '0' with nothing ''. '^' is to mention at the beginning of the name
+#### Replace the starting '0' with nothing ''. '^' is to mention at the beginning of the name
 ```r
 rownames(species_matrix) <- sub("^0","",rownames(species_matrix))
 ```
 
-### Now Add 'MT' at the beginning of every name.
+#### Now Add 'MT' at the beginning of every name.
 ```r
 rownames(species_matrix) <- gsub("^","MT",rownames(species_matrix))
 ```
 
 ---
 
-## now confirm all the sample ids are same in species profile and metadata dataframe
+### now confirm all the sample ids are same in species profile and metadata dataframe
 ```r
 setdiff(rownames(species_matrix), rownames(metadata_df))
 
@@ -115,7 +115,7 @@ setdiff(rownames(metadata_df), rownames(species_matrix))
 
 ---
 
-## Normalize the species profile (RowSum Normalization) and order the rownames in both dataframe
+### Normalize the species profile (RowSum Normalization) and order the rownames in both dataframe
 ```r
 species_matrix_norm <- species_matrix / rowSums(species_matrix)
 
@@ -124,14 +124,14 @@ species_matrix_norm <- species_matrix_norm[rownames(metadata_df),]
 
 ---
 
-# 🔹 STEP 3: Alpha Diversity and Visualization Techniques (SHANNON + PIELOU)
+## 🔹 STEP 3: Alpha Diversity and Visualization Techniques (SHANNON + PIELOU)
 
-## Purpose
+### Purpose
 Compute microbial diversity and evenness between Control and UC samples.
 
 ---
 
-## install necessary packages
+### install necessary packages
 ```r
 install.packages("vegan")    # required for computing alpha diversity
 
@@ -140,7 +140,7 @@ install.packages("vioplot")  # required for violin plot visualization
 
 ---
 
-## load necessary packages
+### load necessary packages
 ```r
 library(vegan)
 
@@ -149,7 +149,7 @@ library(vioplot)
 
 ---
 
-## INPUT
+### INPUT
 - metadata_df:
   - sampleID
   - study_condition (Control / UC)
@@ -160,14 +160,14 @@ library(vioplot)
 
 ---
 
-## make sure the rownames of species profile and metadata are same and in same order
+### make sure the rownames of species profile and metadata are same and in same order
 ```r
 all(rownames(species_matrix_norm) %in% rownames(metadata_df))
 ```
 
 ---
 
-## computing SHANNON INDEX
+### computing SHANNON INDEX
 ```r
 shannon_index <- diversity(
   species_matrix_norm,
@@ -177,7 +177,7 @@ shannon_index <- diversity(
 
 ---
 
-## computing PIELOU INDEX
+### computing PIELOU INDEX
 ```r
 calculate_pielou <- function(mat) {
 
@@ -193,7 +193,7 @@ pielou_index <- calculate_pielou(species_matrix_norm)
 
 ---
 
-## create a dataframe for storing alpha diversity results
+### create a dataframe for storing alpha diversity results
 ```r
 alpha_diversity_df <- data.frame(
   study_condition = metadata_df$study_condition,
@@ -204,11 +204,11 @@ alpha_diversity_df <- data.frame(
 
 ---
 
-# 🔹 STEP 4: Visualization of Alpha Diversity
+## 🔹 STEP 4: Visualization of Alpha Diversity
 
-## SHANNON INDEX
+### SHANNON INDEX
 
-### 1) boxplot
+#### 1) boxplot
 ```r
 boxplot(
   alpha_diversity_df$shannon[
@@ -231,7 +231,7 @@ boxplot(
 
 ---
 
-### 2) violin plot
+#### 2) violin plot
 ```r
 vioplot(
   alpha_diversity_df$shannon[
@@ -252,7 +252,7 @@ vioplot(
 
 ---
 
-## wilcox test for showing significance between the Control and UC group
+### wilcox test for showing significance between the Control and UC group
 ```r
 wilcox.test(
   alpha_diversity_df$shannon[
@@ -267,9 +267,9 @@ wilcox.test(
 
 ---
 
-## PIELOU INDEX
+### PIELOU INDEX
 
-### 1) boxplot
+#### 1) boxplot
 ```r
 boxplot(
   alpha_diversity_df$pielou[
@@ -292,7 +292,7 @@ boxplot(
 
 ---
 
-### 2) violin plot
+#### 2) violin plot
 ```r
 vioplot(
   alpha_diversity_df$pielou[
@@ -313,7 +313,7 @@ vioplot(
 
 ---
 
-## wilcox test for showing significance between the Control and UC group
+### wilcox test for showing significance between the Control and UC group
 ```r
 wilcox.test(
   alpha_diversity_df$pielou[
@@ -329,9 +329,9 @@ wilcox.test(
 ---
 
 
-# 🔹 STEP 5: Beta Diversity and Visualization Techniques
+## 🔹 STEP 5: Beta Diversity and Visualization Techniques
 
-## Purpose
+### Purpose
 Evaluate differences in microbial community composition between groups.
 
 ---
@@ -339,9 +339,9 @@ Evaluate differences in microbial community composition between groups.
 
 ---
 
-# 🔹 STEP 6: Differential Abundance Statistics (Species associated with IBD Disease patients and Control Patients)
+## 🔹 STEP 6: Differential Abundance Statistics (Species associated with IBD Disease patients and Control Patients)
 
-## separate the control and disease metadata, and then separate the species profile using their metadata
+### separate the control and disease metadata, and then separate the species profile using their metadata
 ```r
 control_metadata <- metadata_df[
   metadata_df$study_condition == "Control",
@@ -354,7 +354,7 @@ disease_metadata <- metadata_df[
 
 ---
 
-## subset species profiles
+### subset species profiles
 ```r
 control_species_profile <- species_matrix_norm[
   rownames(control_metadata),
@@ -367,7 +367,7 @@ disease_species_profile <- species_matrix_norm[
 
 ---
 
-## Now use wilcox.test for one species (Coprococcus_catus is Health Associated Core Species (from previous references))
+### Now use wilcox.test for one species (Coprococcus_catus is Health Associated Core Species (from previous references))
 ```r
 wilcox.test(
   disease_species_profile$Coprococcus_catus,
@@ -378,45 +378,45 @@ wilcox.test(
 
 ---
 
-## mean abundance of Coprococcus_catus in disease samples
+### mean abundance of Coprococcus_catus in disease samples
 ```r
 mean(disease_species_profile$Coprococcus_catus)
 ```
 
 ---
 
-## mean abundance of Coprococcus_catus in control samples
+### mean abundance of Coprococcus_catus in control samples
 ```r
 mean(control_species_profile$Coprococcus_catus)
 ```
 
 ---
 
-## See the difference of mean abundance of Coprococcus_catus in disease and control
-## (disease minus control >> If -ve then Control associated, If +ve then Disease associated)
+### See the difference of mean abundance of Coprococcus_catus in disease and control
+### (disease minus control >> If -ve then Control associated, If +ve then Disease associated)
 ```r
 mean(disease_species_profile$Coprococcus_catus) - mean(control_species_profile$Coprococcus_catus)
 ```
 
 ---
 
-# 🔹 STEP 7: Use wilcox.test for all the species using wilcox batch function
+## 🔹 STEP 7: Use wilcox.test for all the species using wilcox batch function
 
-## install required package
+### install required package
 ```r
 install.packages("dplyr")
 ```
 
 ---
 
-## load required package
+### load required package
 ```r
 library(dplyr)
 ```
 
 ---
 
-## Wilcoxon batch function
+### Wilcoxon batch function
 ```r
 wilcox_batch = function(x,y)
 {
@@ -502,7 +502,7 @@ wilcox_batch = function(x,y)
 
 ---
 
-## Run the function for our data
+### Run the function for our data
 ```r
 wilcox_result <- wilcox_batch(
   t(disease_species_profile),
@@ -512,9 +512,9 @@ wilcox_result <- wilcox_batch(
 
 ---
 
-# 🔹 STEP 8: Volcano Plot Visualization
+## 🔹 STEP 8: Volcano Plot Visualization
 
-## install required packages
+### install required packages
 ```r
 install.packages("ggplot2")
 
@@ -523,7 +523,7 @@ install.packages("ggrepel")
 
 ---
 
-## load required packages
+### load required packages
 ```r
 library(ggplot2)
 
@@ -532,8 +532,8 @@ library(ggrepel)
 
 ---
 
-## Add the log2 fold change
-## (value 1 = mean abundance in disease is double the mean abundance in control)
+### Add the log2 fold change
+### (value 1 = mean abundance in disease is double the mean abundance in control)
 ```r
 wilcox_result$log2_fold_change <- log2(
   wilcox_result$mean1_array /
@@ -543,7 +543,7 @@ wilcox_result$log2_fold_change <- log2(
 
 ---
 
-## Add the significance column based on p.adjust i.e q-value
+### Add the significance column based on p.adjust i.e q-value
 ```r
 wilcox_result$significance <- ifelse(
   wilcox_result$p_adjust <= 0.05,
@@ -554,8 +554,8 @@ wilcox_result$significance <- ifelse(
 
 ---
 
-## For proper visualization we can use negative log of q-value
-## (Higher the value >> more is the significance)
+### For proper visualization we can use negative log of q-value
+### (Higher the value >> more is the significance)
 ```r
 wilcox_result$logQValue <- -log10(
   wilcox_result$p_adjust
@@ -564,8 +564,8 @@ wilcox_result$logQValue <- -log10(
 
 ---
 
-## add the color code based on the log2 fold change
-## (Only species with double mean abundance change will be colored)
+### add the color code based on the log2 fold change
+### (Only species with double mean abundance change will be colored)
 ```r
 wilcox_result$color_code <- ifelse(
   wilcox_result$log2_fold_change > 1,
@@ -582,7 +582,7 @@ wilcox_result$color_code <- ifelse(
 
 ---
 
-## Filter the dataframe where only significant species are present (q-value <= 0.05)
+### Filter the dataframe where only significant species are present (q-value <= 0.05)
 ```r
 wilcox_result_filt <- wilcox_result[
   which(wilcox_result$significance == "significant"),
@@ -591,9 +591,9 @@ wilcox_result_filt <- wilcox_result[
 
 ---
 
-## Using q-value <= 0.05, we have lot of species,
-## so Visualization will look congested
-## therefore filter species having q-value <= 0.001
+### Using q-value <= 0.05, we have lot of species,
+### so Visualization will look congested
+### therefore filter species having q-value <= 0.001
 ```r
 wilcox_result_filt2 <- wilcox_result_filt[
   which(wilcox_result_filt$p_adjust <= 0.001),
@@ -602,7 +602,7 @@ wilcox_result_filt2 <- wilcox_result_filt[
 
 ---
 
-## Now plot the Volcano plot
+### Now plot the Volcano plot
 ```r
 pdf("Wilcox_results.pdf", height = 8, width = 15)
 
@@ -669,7 +669,7 @@ dev.off()
 
 ---
 
-# 💡 Key Notes
+## 💡 Key Notes
 
 - Normalize abundance profiles before diversity analysis
 - Use Wilcoxon test for non-parametric microbiome comparisons
