@@ -816,14 +816,6 @@ dev.off()
 ```
 
 ---
-
-## 💡 Key Notes
-
-* Normalize abundance profiles before diversity analysis
-* Use the Wilcoxon test for non-parametric microbiome comparisons
-* Use FDR-adjusted p-values (q-values) for multiple testing correction
-* Bray-Curtis and Kendall distance are commonly used in microbiome beta diversity
-* PCoA helps visualize microbial community separation
-* Volcano plots help identify biologically important taxa
+![VolcanoDummy](images/Dummy_VolcanoPlot.png)
 
 ````
