@@ -144,7 +144,7 @@ species_matrix_norm <- species_matrix_norm[rownames(metadata_df),]
 
 Compute microbial diversity and evenness between the Control and UC samples.
 
-![AlphaDiversity](images/Alpha_Diversity.png)
+![AlphaDiversity](images/AlphaDiversity.png)
 
 ---
 
@@ -178,7 +178,7 @@ library(vioplot)
 
 ---
 
-### Make sure the rownames of species profile and metadata are the same and in the same order
+### Make sure the rownames of the species profile and metadata are the same and in the same order
 
 ```r
 all(rownames(species_matrix_norm) %in% rownames(metadata_df))
