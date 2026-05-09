@@ -79,7 +79,13 @@ trimmomatic -version
 
 ---
 
-## 🔹 STEP 4: Understanding FASTQ Format
+## 🔹 STEP 4: Information of the Dataset Provided for 16s Analysis
+
+![CohortInformation?](images/CohortInformation.png)
+
+
+---
+## 🔹 STEP 5: Understanding FASTQ Format
 
 ### Purpose  
 FASTQ is the standard sequencing data format.
@@ -110,7 +116,7 @@ awk 'NR%4==1 {gsub("@",">",$0); print} NR%4==2 {print}' sample_R1_paired.fastq >
 
 ---
 
-## 🔹 STEP 5: Quality Check (FastQC)
+## 🔹 STEP 6: Quality Check (FastQC)
 
 ### Purpose  
 Assess sequencing quality before further analysis.
@@ -131,7 +137,7 @@ python3 -m http.server 8000
 
 ---
 
-## 🔹 STEP 6: Trimming Reads (Trimmomatic)
+## 🔹 STEP 7: Trimming Reads (Trimmomatic)
 
 ### Purpose  
 Remove low-quality bases and short reads.
@@ -195,7 +201,7 @@ done
 
 ---
 
-## 🔹 STEP 7: Taxonomic Classification (SPINGO)
+## 🔹 STEP 8: Taxonomic Classification (SPINGO)
 
 ### Purpose  
 Assign taxonomy using a reference database.
