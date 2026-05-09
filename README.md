@@ -11,10 +11,10 @@ Topics covered include Linux basics, remote server usage, preprocessing of seque
 ## Workshop Coordinators
 
 * Dr. Tarini Shankar Ghosh
-  Associate Professor, Department of Computational Biology, IIIT-Delhi
+* Associate Professor, Department of Computational Biology, IIIT-Delhi
 
 * Dr. Sharmila Mande
-  Ayush Distinguished Scientist Chair, Ministry of Ayush, Government of India
+* Ayush Distinguished Scientist Chair, Ministry of Ayush, Government of India
 
 ## Hands-on Instructors
 
