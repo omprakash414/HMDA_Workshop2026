@@ -1,8 +1,21 @@
 # 🧬 Metagenomics Hands-on Workshop
 
-This repository contains materials for a hands-on session on basic metagenomics analysis using a Linux server.  
-It includes commands, scripts, and step-by-step instructions for installing tools like FastQC and Trimmomatic.  
-The workflow covers quality checking, read trimming, and taxonomic classification using SPINGO for 16S sequencing data and MetaPhlAn3 for WGS data.
-It is designed to help beginners understand and perform end-to-end analysis in a practical setting.
+This repository contains the hands-on commands, workflows, scripts, and analysis pipelines used in the **5 Days Hands-On Workshop on Human Microbiome Data Analysis (11th–15th May 2026)**. The workshop covers practical workflows for analyzing microbiome data from both **16S rRNA sequencing** and **Whole Genome Shotgun (WGS) metagenomics** datasets.
 
-It further dives into StrainPhlAn for strain-level analysis and HUMAnN for functional-level analysis.
+The repository is designed primarily for beginners and biologists, providing step-by-step command-line tutorials, preprocessing workflows, R-based microbiome analysis, visualization techniques, and illustrations of microbiome data analysis pipelines to help users understand them.
+
+Topics covered include Linux basics, remote server usage, preprocessing of sequencing data, taxonomic profiling, abundance normalization, alpha and beta diversity analysis, differential abundance statistics, MetaPhlAN, HUMAnN, StrainPhlAN, and downstream interpretation workflows.
+
+⚠️ Note: This repository does not contain raw sequencing datasets.
+
+## Workshop Coordinators
+
+* Dr. Tarini Shankar Ghosh
+* Dr. Sharmila Mande
+
+## Hands-on Instructors
+
+* Sourav Goswami (SG)
+* Omprakash Shete (OS)
+* Alisha Ansari (AA)
+* Sagar Sharma (SS)
