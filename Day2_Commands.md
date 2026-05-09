@@ -1,4 +1,4 @@
-```md
+
 # Day 2 Commands
 
 This practical covers downstream microbiome analysis using processed taxonomic profiles, including abundance normalization, alpha diversity, beta diversity, and differential abundance statistics.
