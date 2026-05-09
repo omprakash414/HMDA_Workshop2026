@@ -11,8 +11,20 @@ This practical introduces the basic preprocessing steps in metagenomics analysis
 Raw FASTQ → Quality Check → Trimming → Clean Reads → Classification
 
 ---
+## 🔹 STEP 1: Linux OS and Installing VS Code Application
 
-## 🔹 STEP 1: Install Miniconda
+![LinuxServerVSCode](images/LinuxServer_VSCode.png)
+
+
+### Installing VS-Code
+
+1. https://code.visualstudio.com/download
+2. Follow the instructions in the app and install it.
+3. Add the Remote SSH extension in VS Code and then log in to the server using the details provided to you.
+
+
+---
+## 🔹 STEP 2: Install Miniconda
 
 ### Purpose  
 Miniconda is used to manage software and dependencies in isolated environments, preventing conflicts between tools.
@@ -36,7 +48,7 @@ conda --version
 
 ---
 
-## 🔹 STEP 2: Create Environments
+## 🔹 STEP 3: Create Environments
 
 ### Purpose  
 Each tool is installed in a separate environment to avoid dependency conflicts.
@@ -67,7 +79,7 @@ trimmomatic -version
 
 ---
 
-## 🔹 STEP 3: Understanding FASTQ Format
+## 🔹 STEP 4: Understanding FASTQ Format
 
 ### Purpose  
 FASTQ is the standard sequencing data format.
@@ -98,7 +110,7 @@ awk 'NR%4==1 {gsub("@",">",$0); print} NR%4==2 {print}' sample_R1_paired.fastq >
 
 ---
 
-## 🔹 STEP 4: Quality Check (FastQC)
+## 🔹 STEP 5: Quality Check (FastQC)
 
 ### Purpose  
 Assess sequencing quality before further analysis.
@@ -119,7 +131,7 @@ python3 -m http.server 8000
 
 ---
 
-## 🔹 STEP 5: Trimming Reads (Trimmomatic)
+## 🔹 STEP 6: Trimming Reads (Trimmomatic)
 
 ### Purpose  
 Remove low-quality bases and short reads.
@@ -183,7 +195,7 @@ done
 
 ---
 
-## 🔹 STEP 6: Taxonomic Classification (SPINGO)
+## 🔹 STEP 7: Taxonomic Classification (SPINGO)
 
 ### Purpose  
 Assign taxonomy using a reference database.
