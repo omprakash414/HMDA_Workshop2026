@@ -23,7 +23,7 @@ Merge all SPINGO output files into a single abundance matrix and normalize the s
 #### create a text file containing all the names of output files
 ```bash
 ls *.spingo.out.txt > all_spingo_outputs.txt
-````
+```
 
 #### Now give all_spingo_outputs.txt to a perl script which merge all the samples and create abundance profile (matrix)
 
