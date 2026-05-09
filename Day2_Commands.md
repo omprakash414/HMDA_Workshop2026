@@ -289,6 +289,7 @@ Evaluate differences in microbial community composition between groups using dis
 ```r
 library(vegan)
 library(ggplot2)
+library(ade4)
 ```
 
 ---
@@ -332,6 +333,11 @@ pcoa_bray <- cmdscale(dist_bray, k = 2, eig = TRUE)
 
 ```r
 pcoa_bray_df <- as.data.frame(pcoa_bray$points)
+colnames(pcoa_bray_df) <- c("PCoA1", "PCoA2")
+pcoa_bray_df$condition <- meta$study_condition
+
+pcoa_bray <- dudi.pco(dist_bray, scannf = FALSE, nf = 20)
+pcoa_bray_df <- as.data.frame(pcoa_bray$li[,1:2])
 colnames(pcoa_bray_df) <- c("PCoA1", "PCoA2")
 pcoa_bray_df$condition <- meta$study_condition
 ```
