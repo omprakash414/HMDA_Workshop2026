@@ -62,8 +62,6 @@ scp -r user1@192.168.22.173:/Path_to_the_abundance_profile/Abundance_Profile.txt
 
 ## 🔹 STEP 2: Data Normalization in RStudio
 
-### Purpose
-
 Import the abundance matrix and metadata into RStudio and normalize the abundance profile.
 
 ![RowSumNormalization](images/RowSum_Normalization.png)
