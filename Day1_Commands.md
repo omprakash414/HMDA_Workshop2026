@@ -254,8 +254,3 @@ done
 
 ---
 
-## 💡 Key Notes
-- Perform quality control before trimming  
-- Use paired reads for downstream analysis  
-- Keep environments separate  
-- Automate repetitive tasks  
