@@ -286,7 +286,7 @@ wilcox.test(
 
 Evaluate differences in microbial community composition between groups using distance-based methods and PCoA visualization.
 
-![BetaDiversity](images/Beta_Diversity.png)
+![BetaDiversity](images/BetaDiversity.png)
 
 ---
 
