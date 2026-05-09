@@ -18,7 +18,7 @@ Topics covered include Linux basics, remote server usage, preprocessing of seque
 
 ## Hands-on Instructors
 
-All instructors are PhD students from the **Microbiome Informatics Lab ** in the Department of Computational Biology at IIIT-Delhi.
+All instructors are PhD students from the **Microbiome Informatics Lab** in the Department of Computational Biology at IIIT-Delhi.
 
 * Sourav Goswami (SG)
 * Omprakash Shete (OS)
