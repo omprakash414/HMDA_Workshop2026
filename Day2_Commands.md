@@ -21,6 +21,7 @@ Merge all SPINGO output files into a single abundance matrix and normalize the s
 ### Merge SPINGO Outputs into Abundance Matrix
 
 #### create a text file containing all the names of output files
+
 ```bash
 ls *.spingo.out.txt > all_spingo_outputs.txt
 ```
@@ -40,7 +41,9 @@ head Abundance_Profile.txt
 ---
 
 ### Transfer Abundance_Profile.txt to laptop/local system
+
 #### On your local system open command prompt (cmd)
+
 #### Then open the new tab using Windows PowerShell and go in Downloads directory
 
 ```bash
@@ -68,7 +71,7 @@ Import abundance matrix and metadata into RStudio and normalize the abundance pr
 #### Import the Abundance_Profile.txt using below command in RStudio
 
 ```r
-species_matrix <- read.delim("C:/Users/ompra/Downloads/Abundance_Profile.txt",row.names = 1)
+species_matrix <- read.delim("C:/Users/ompra/Downloads/Abundance_Profile.txt", row.names = 1)
 ```
 
 ---
@@ -93,20 +96,21 @@ rownames(metadata_df) <- metadata_df$sampleID
 #### Replace the '_' and everything after that with nothing ''
 
 ```r
-rownames(species_matrix) <- sub("_.*","",rownames(species_matrix))
+rownames(species_matrix) <- sub("_.*", "", rownames(species_matrix))
 ```
 
 #### Replace the starting '0' with nothing ''
+
 #### '^' means beginning of the name
 
 ```r
-rownames(species_matrix) <- sub("^0","",rownames(species_matrix))
+rownames(species_matrix) <- sub("^0", "", rownames(species_matrix))
 ```
 
 #### Add 'MT' at the beginning of every sample name
 
 ```r
-rownames(species_matrix) <- gsub("^","MT",rownames(species_matrix))
+rownames(species_matrix) <- gsub("^", "MT", rownames(species_matrix))
 ```
 
 ---
@@ -114,14 +118,15 @@ rownames(species_matrix) <- gsub("^","MT",rownames(species_matrix))
 ### Confirm all the sample ids are same in species profile and metadata dataframe
 
 ```r
-setdiff(rownames(species_matrix),rownames(metadata_df))
+setdiff(rownames(species_matrix), rownames(metadata_df))
 
-setdiff(rownames(metadata_df),rownames(species_matrix))
+setdiff(rownames(metadata_df), rownames(species_matrix))
 ```
 
 ---
 
 ### Normalize the species profile (RowSum Normalization)
+
 ### and order the rownames in both dataframe
 
 ```r
@@ -134,6 +139,7 @@ species_matrix_norm <- species_matrix_norm[rownames(metadata_df),]
 ## 🔹 STEP 3: Alpha Diversity and Visualization Techniques (SHANNON + PIELOU)
 
 ### Purpose
+
 Compute microbial diversity and evenness between Control and UC samples.
 
 ---
@@ -161,6 +167,7 @@ library(vioplot)
 * metadata_df
   * sampleID
   * study_condition (Control / UC)
+
 * species_matrix_norm
   * rows = sampleID
   * columns = species
@@ -170,7 +177,7 @@ library(vioplot)
 ### Make sure the rownames of species profile and metadata are same and in same order
 
 ```r
-all(rownames(species_matrix_norm) %in%rownames(metadata_df))
+all(rownames(species_matrix_norm) %in% rownames(metadata_df))
 ```
 
 ---
@@ -178,7 +185,7 @@ all(rownames(species_matrix_norm) %in%rownames(metadata_df))
 ### Computing SHANNON INDEX
 
 ```r
-shannon_index <- diversity(species_matrix_norm,index = "shannon")
+shannon_index <- diversity(species_matrix_norm, index = "shannon")
 ```
 
 ---
@@ -187,9 +194,9 @@ shannon_index <- diversity(species_matrix_norm,index = "shannon")
 
 ```r
 calculate_pielou <- function(mat) {
-  H <- diversity(mat,index = "shannon")
+  H <- diversity(mat, index = "shannon")
   S <- rowSums(mat > 0)
-  ifelse(S > 1,H / log(S),NA)
+  ifelse(S > 1, H / log(S), NA)
 }
 
 pielou_index <- calculate_pielou(species_matrix_norm)
@@ -200,7 +207,7 @@ pielou_index <- calculate_pielou(species_matrix_norm)
 ### Create a dataframe for storing alpha diversity results
 
 ```r
-alpha_diversity_df <- data.frame(study_condition = metadata_df$study_condition,shannon = shannon_index,pielou = pielou_index)
+alpha_diversity_df <- data.frame(study_condition = metadata_df$study_condition, shannon = shannon_index, pielou = pielou_index)
 ```
 
 ---
@@ -214,6 +221,7 @@ Visualize and compare alpha diversity between Control and UC samples.
 ---
 
 ### SHANNON INDEX
+
 #### 1) boxplot
 
 ```r
@@ -329,7 +337,7 @@ all(rownames(mat) == meta$sampleID)
 ### Compute Bray-Curtis distance
 
 ```r
-dist_bray <- vegdist(mat,method = "bray")
+dist_bray <- vegdist(mat, method = "bray")
 ```
 
 ---
@@ -337,7 +345,7 @@ dist_bray <- vegdist(mat,method = "bray")
 ### Perform PCoA
 
 ```r
-pcoa_bray <- cmdscale(dist_bray,k = 2,eig = TRUE)
+pcoa_bray <- cmdscale(dist_bray, k = 2, eig = TRUE)
 ```
 
 ---
@@ -346,7 +354,7 @@ pcoa_bray <- cmdscale(dist_bray,k = 2,eig = TRUE)
 
 ```r
 pcoa_bray_df <- as.data.frame(pcoa_bray$points)
-colnames(pcoa_bray_df) <- c("PCoA1","PCoA2")
+colnames(pcoa_bray_df) <- c("PCoA1", "PCoA2")
 pcoa_bray_df$condition <- meta$study_condition
 ```
 
@@ -368,17 +376,18 @@ ggplot(
 ### PERMANOVA Statistics
 
 ```r
-adonis_bray <- adonis2(dist_bray ~ study_condition,data = meta)
+adonis_bray <- adonis2(dist_bray ~ study_condition, data = meta)
 adonis_bray
 ```
 
+---
 
 ## Euclidean Distance Based Beta Diversity
 
 ### Compute Euclidean distance
 
 ```r
-dist_euc <- dist(mat,method = "euclidean")
+dist_euc <- dist(mat, method = "euclidean")
 ```
 
 ---
@@ -386,7 +395,7 @@ dist_euc <- dist(mat,method = "euclidean")
 ### Perform PCoA
 
 ```r
-pcoa_euc <- cmdscale(dist_euc,k = 2,eig = TRUE)
+pcoa_euc <- cmdscale(dist_euc, k = 2, eig = TRUE)
 ```
 
 ---
@@ -395,7 +404,7 @@ pcoa_euc <- cmdscale(dist_euc,k = 2,eig = TRUE)
 
 ```r
 pcoa_euc_df <- as.data.frame(pcoa_euc$points)
-colnames(pcoa_euc_df) <- c("PCoA1","PCoA2")
+colnames(pcoa_euc_df) <- c("PCoA1", "PCoA2")
 pcoa_euc_df$condition <- meta$study_condition
 ```
 
@@ -417,7 +426,7 @@ ggplot(
 ### PERMANOVA Statistics
 
 ```r
-adonis_euc <- adonis2(dist_euc ~ study_condition,data = meta)
+adonis_euc <- adonis2(dist_euc ~ study_condition, data = meta)
 adonis_euc
 ```
 
@@ -444,7 +453,7 @@ dist_kendall <- as.dist(1 - cor.fk(t(mat)) / 2)
 ### Perform PCoA
 
 ```r
-pcoa_kendall <- cmdscale(dist_kendall,k = 2,eig = TRUE)
+pcoa_kendall <- cmdscale(dist_kendall, k = 2, eig = TRUE)
 ```
 
 ---
@@ -453,7 +462,7 @@ pcoa_kendall <- cmdscale(dist_kendall,k = 2,eig = TRUE)
 
 ```r
 pcoa_kendall_df <- as.data.frame(pcoa_kendall$points)
-colnames(pcoa_kendall_df) <- c("PCoA1","PCoA2")
+colnames(pcoa_kendall_df) <- c("PCoA1", "PCoA2")
 pcoa_kendall_df$condition <- meta$study_condition
 ```
 
@@ -475,7 +484,7 @@ ggplot(
 ### PERMANOVA Statistics
 
 ```r
-adonis_kendall <- adonis2(dist_kendall ~ study_condition,data = meta)
+adonis_kendall <- adonis2(dist_kendall ~ study_condition, data = meta)
 adonis_kendall
 ```
 
@@ -537,7 +546,7 @@ library(dplyr)
 ```r
 centroids <- pcoa_kendall_df %>%
   group_by(condition) %>%
-  summarise(PCoA1 = mean(PCoA1),PCoA2 = mean(PCoA2))
+  summarise(PCoA1 = mean(PCoA1), PCoA2 = mean(PCoA2))
 ```
 
 ---
@@ -549,7 +558,7 @@ df2 <- merge(
   pcoa_kendall_df,
   centroids,
   by = "condition",
-  suffixes = c("","_cent"))
+  suffixes = c("", "_cent"))
 ```
 
 ---
@@ -561,7 +570,7 @@ ggplot(
   df2,
   aes(PCoA1, PCoA2, color = condition)) +
   geom_point(size = 3) +
-  geom_segment(aes(xend = PCoA1_cent,yend = PCoA2_cent),alpha = 0.9) +
+  geom_segment(aes(xend = PCoA1_cent, yend = PCoA2_cent), alpha = 0.9) +
   theme_minimal()
 ```
 
@@ -598,7 +607,7 @@ disease_species_profile <- species_matrix_norm[rownames(disease_metadata),]
 ### Coprococcus_catus is Health Associated Core Species
 
 ```r
-wilcox.test(disease_species_profile$Coprococcus_catus,control_species_profile$Coprococcus_catus)
+wilcox.test(disease_species_profile$Coprococcus_catus, control_species_profile$Coprococcus_catus)
 ```
 
 ---
@@ -621,7 +630,11 @@ mean(control_species_profile$Coprococcus_catus)
 
 ### Difference of mean abundance
 
-### (Disease minus Control: If -ve then Control associated; If +ve then Disease associated)
+#### Disease minus Control
+
+#### If -ve then Control associated
+
+#### If +ve then Disease associated
 
 ```r
 mean(disease_species_profile$Coprococcus_catus) - mean(control_species_profile$Coprococcus_catus)
@@ -700,11 +713,12 @@ wilcox_batch = function(x,y)
 }
 ```
 
+---
 
 ### Run the function for our data
 
 ```r
-wilcox_result <- wilcox_batch(t(disease_species_profile),t(control_species_profile))
+wilcox_result <- wilcox_batch(t(disease_species_profile), t(control_species_profile))
 ```
 
 ---
@@ -748,7 +762,7 @@ wilcox_result$log2_fold_change <- log2(wilcox_result$mean1_array / wilcox_result
 ### Add significance column based on q-value
 
 ```r
-wilcox_result$significance <- ifelse(wilcox_result$p_adjust <= 0.05,"significant","non-significant")
+wilcox_result$significance <- ifelse(wilcox_result$p_adjust <= 0.05, "significant", "non-significant")
 ```
 
 ---
@@ -766,8 +780,8 @@ wilcox_result$logQValue <- -log10(wilcox_result$p_adjust)
 ### Add color code based on log2 fold change
 
 ```r
-wilcox_result$color_code <- ifelse(wilcox_result$log2_fold_change > 1,"Enriched",
-                                    ifelse(wilcox_result$log2_fold_change < -1,"Depleted","Moderate Change"))
+wilcox_result$color_code <- ifelse(wilcox_result$log2_fold_change > 1, "Enriched",
+                                    ifelse(wilcox_result$log2_fold_change < -1, "Depleted", "Moderate Change"))
 ```
 
 ---
@@ -791,19 +805,20 @@ wilcox_result_filt2 <- wilcox_result_filt[which(wilcox_result_filt$p_adjust <= 0
 ### Plot Volcano Plot
 
 ```r
-pdf("Wilcox_results.pdf",height = 8,width = 15)
+pdf("Wilcox_results.pdf", height = 8, width = 15)
+
 ggplot(wilcox_result_filt2,
-  aes(x = log2_fold_change,y = logQValue)) +
-  geom_point(aes(color = color_code),size = 3) +
-  geom_text_repel(data = wilcox_result_filt2,aes(label = rownames(wilcox_result_filt2)),size = 4,max.overlaps = 45) +
-  geom_vline(xintercept = c(-1, 1),linetype = "dashed",color = "grey",linewidth = 0.7) +
-  geom_vline(xintercept = 0,linetype = "dashed",color = "black",linewidth = 0.8) +
+  aes(x = log2_fold_change, y = logQValue)) +
+  geom_point(aes(color = color_code), size = 3) +
+  geom_text_repel(data = wilcox_result_filt2, aes(label = rownames(wilcox_result_filt2)), size = 4, max.overlaps = 45) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "grey", linewidth = 0.7) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "black", linewidth = 0.8) +
   scale_color_manual(
-    values = c("Enriched" = "royalblue3","Depleted" = "palevioletred2","Moderate Change" = "gray3")) +
+    values = c("Enriched" = "royalblue3", "Depleted" = "palevioletred2", "Moderate Change" = "gray3")) +
   theme_minimal() +
   labs(x = "Log2 Fold Change (IBD/Control)", y = "-logQValue") +
   theme(
-    panel.border = element_rect(color = "black",fill = NA,linewidth = 0.7),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.7),
     axis.text = element_text(size = 12),
     axis.title = element_text(size = 12))
 
@@ -821,5 +836,4 @@ dev.off()
 * PCoA helps visualize microbial community separation
 * Volcano plots help identify biologically important taxa
 
-```
-```
+````
