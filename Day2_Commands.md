@@ -225,13 +225,7 @@ Visualize and compare alpha diversity between Control and UC samples.
 #### 1) boxplot
 
 ```r
-boxplot(
-  alpha_diversity_df$shannon[alpha_diversity_df$study_condition == "Control"],
-  alpha_diversity_df$shannon[alpha_diversity_df$study_condition == "UC"],
-  names = c("Control", "UC"),
-  col = c("turquoise3", "pink2"),
-  ylab = "Shannon Index",
-  outline = FALSE)
+boxplot(shannon ~ study_condition, data = alpha_diversity_df, col = c("turquoise3", "pink2"))
 ```
 
 ---
@@ -239,12 +233,7 @@ boxplot(
 #### 2) violin plot
 
 ```r
-vioplot(
-  alpha_diversity_df$shannon[alpha_diversity_df$study_condition == "Control"],
-  alpha_diversity_df$shannon[alpha_diversity_df$study_condition == "UC"],
-  names = c("Control", "UC"),
-  col = c("turquoise3", "pink2"),
-  ylab = "Shannon Index")
+vioplot(shannon ~ study_condition, data = alpha_diversity_df, col = c("turquoise3", "pink2"))
 ```
 
 ---
@@ -264,13 +253,7 @@ wilcox.test(
 #### 1) boxplot
 
 ```r
-boxplot(
-  alpha_diversity_df$pielou[alpha_diversity_df$study_condition == "Control"],
-  alpha_diversity_df$pielou[alpha_diversity_df$study_condition == "UC"],
-  names = c("Control", "UC"),
-  col = c("turquoise3", "pink2"),
-  ylab = "Pielou Index",
-  outline = FALSE)
+boxplot(pielou ~ study_condition, data = alpha_diversity_df, col = c("turquoise3", "pink2"))
 ```
 
 ---
@@ -278,12 +261,7 @@ boxplot(
 #### 2) violin plot
 
 ```r
-vioplot(
-  alpha_diversity_df$pielou[alpha_diversity_df$study_condition == "Control"],
-  alpha_diversity_df$pielou[alpha_diversity_df$study_condition == "UC"],
-  names = c("Control", "UC"),
-  col = c("turquoise3", "pink2"),
-  ylab = "Pielou Index")
+vioplot(pielou ~ study_condition, data = alpha_diversity_df, col = c("turquoise3", "pink2"))
 ```
 
 ---
