@@ -54,4 +54,4 @@
 ---
 
 ## WorkFlow
-16s Raw Sequencing Data >> Quality Check >> Trimming >> Taxonomic Classification
+Understanding Linux Server >> VS-code App Installation>> Miniconda and Environments >> 16s Raw Sequencing Data >> Quality Check >> Trimming >> Taxonomic Classification
