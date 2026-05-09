@@ -7,7 +7,9 @@ This practical covers downstream microbiome analysis using processed taxonomic p
 
 ## Workflow Overview
 
-Processed Taxonomic Profile → Normalization → Diversity Analysis → Statistical Testing → Visualization
+![Workflow2](images/WorkFlow_Day2.png)
+
+Processed Taxonomic Profile → Normalization → Diversity Analysis (Alpha and Beta) → Statistical Testing (Wilcox Test) → Visualization
 
 ---
 
@@ -42,9 +44,9 @@ head Abundance_Profile.txt
 
 ### Transfer Abundance_Profile.txt to laptop/local system
 
-#### On your local system open command prompt (cmd)
+#### On your local system, open the command prompt (cmd)
 
-#### Then open the new tab using Windows PowerShell and go in Downloads directory
+#### Then open the new tab using Windows PowerShell and go to the Downloads directory
 
 ```bash
 cd Downloads/
@@ -62,13 +64,15 @@ scp -r user1@192.168.22.173:/Path_to_the_abundance_profile/Abundance_Profile.txt
 
 ### Purpose
 
-Import abundance matrix and metadata into RStudio and normalize the abundance profile.
+Import the abundance matrix and metadata into RStudio and normalize the abundance profile.
+
+![RowSumNormalization](images/RowSum_Normalization.png)
 
 ---
 
 ### Open the RStudio on your laptop/local system
 
-#### Import the Abundance_Profile.txt using below command in RStudio
+#### Import the Abundance_Profile.txt using the command below in RStudio
 
 ```r
 species_matrix <- read.delim("C:/Users/ompra/Downloads/Abundance_Profile.txt", row.names = 1)
@@ -115,7 +119,7 @@ rownames(species_matrix) <- gsub("^", "MT", rownames(species_matrix))
 
 ---
 
-### Confirm all the sample ids are same in species profile and metadata dataframe
+### Confirm all the sample IDs are the same in the species profile and the metadata dataframe
 
 ```r
 setdiff(rownames(species_matrix), rownames(metadata_df))
@@ -127,7 +131,7 @@ setdiff(rownames(metadata_df), rownames(species_matrix))
 
 ### Normalize the species profile (RowSum Normalization)
 
-### and order the rownames in both dataframe
+### and order the rownames in both dataframes
 
 ```r
 species_matrix_norm <- species_matrix / rowSums(species_matrix)
@@ -140,7 +144,9 @@ species_matrix_norm <- species_matrix_norm[rownames(metadata_df),]
 
 ### Purpose
 
-Compute microbial diversity and evenness between Control and UC samples.
+Compute microbial diversity and evenness between the Control and UC samples.
+
+![AlphaDiversity](images/Alpha_Diversity.png)
 
 ---
 
@@ -174,7 +180,7 @@ library(vioplot)
 
 ---
 
-### Make sure the rownames of species profile and metadata are same and in same order
+### Make sure the rownames of species profile and metadata are the same and in the same order
 
 ```r
 all(rownames(species_matrix_norm) %in% rownames(metadata_df))
@@ -190,7 +196,7 @@ shannon_index <- diversity(species_matrix_norm, index = "shannon")
 
 ---
 
-### Computing PIELOU INDEX
+### Computing the PIELOU INDEX
 
 ```r
 calculate_pielou <- function(mat) {
@@ -216,7 +222,7 @@ alpha_diversity_df <- data.frame(study_condition = metadata_df$study_condition, 
 
 ### Purpose
 
-Visualize and compare alpha diversity between Control and UC samples.
+Visualize and compare alpha diversity between the Control and UC samples.
 
 ---
 
@@ -282,6 +288,8 @@ wilcox.test(
 
 Evaluate differences in microbial community composition between groups using distance-based methods and PCoA visualization.
 
+![BetaDiversity](images/Beta_Diversity.png)
+
 ---
 
 ### Load required packages
@@ -303,7 +311,7 @@ meta <- metadata_df
 
 ---
 
-### Confirm sample order is same in metadata and abundance matrix
+### Confirm sample order is the same in metadata and abundance matrix
 
 ```r
 all(rownames(mat) == meta$sample_id)
@@ -311,7 +319,7 @@ all(rownames(mat) == meta$sample_id)
 
 ---
 
-## Bray-Curtis Distance Based Beta Diversity
+## Bray-Curtis Distance-Based Beta Diversity
 
 ### Compute Bray-Curtis distance
 
@@ -366,7 +374,7 @@ adonis_bray
 
 ---
 
-## Euclidean Distance Based Beta Diversity
+## Euclidean Distance-Based Beta Diversity
 
 ### Compute Euclidean distance
 
@@ -416,7 +424,7 @@ adonis_euc
 
 ---
 
-## Kendall Distance Based Beta Diversity
+## Kendall Distance-Based Beta Diversity
 
 ### Load required package
 
@@ -426,7 +434,7 @@ library(pcaPP)
 
 ---
 
-### Compute Kendall based distance
+### Compute Kendall-based distance
 
 ```r
 dist_kendall <- as.dist(1 - cor.fk(t(mat)) / 2)
@@ -564,7 +572,7 @@ ggplot(
 
 ### Purpose
 
-Identify species associated with disease and control groups using Wilcoxon statistical testing.
+Identify species associated with disease and control groups using the Wilcoxon test.
 
 ---
 
@@ -588,7 +596,7 @@ disease_species_profile <- species_matrix_norm[rownames(disease_metadata),]
 
 ### Use wilcox.test for one species
 
-### Coprococcus_catus is Health Associated Core Species
+### Coprococcus_catus is Health-Associated Core Species
 
 ```r
 wilcox.test(disease_species_profile$Coprococcus_catus, control_species_profile$Coprococcus_catus)
@@ -626,7 +634,7 @@ mean(disease_species_profile$Coprococcus_catus) - mean(control_species_profile$C
 
 ---
 
-## 🔹 STEP 7: Use wilcox.test for all the species using wilcox batch function
+## 🔹 STEP 7: Use wilcox.test for all the species using the wilcox batch function
 
 ### Purpose
 
@@ -814,7 +822,7 @@ dev.off()
 ## 💡 Key Notes
 
 * Normalize abundance profiles before diversity analysis
-* Use Wilcoxon test for non-parametric microbiome comparisons
+* Use the Wilcoxon test for non-parametric microbiome comparisons
 * Use FDR-adjusted p-values (q-values) for multiple testing correction
 * Bray-Curtis and Kendall distance are commonly used in microbiome beta diversity
 * PCoA helps visualize microbial community separation
