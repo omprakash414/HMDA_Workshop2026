@@ -86,7 +86,7 @@ metadata_df <- data.frame(read_excel("C:/Users/ompra/Downloads/metadata_df.xlsx"
 #### Add rownames to the metadata dataframe
 
 ```r
-rownames(metadata_df) <- metadata_df$sampleID
+rownames(metadata_df) <- metadata_df$sample_id
 ```
 
 ---
@@ -165,11 +165,11 @@ library(vioplot)
 ### INPUT
 
 * metadata_df
-  * sampleID
+  * sample_id
   * study_condition (Control / UC)
 
 * species_matrix_norm
-  * rows = sampleID
+  * rows = sample_id
   * columns = species
 
 ---
@@ -327,7 +327,7 @@ meta <- metadata_df
 ### Confirm sample order is same in metadata and abundance matrix
 
 ```r
-all(rownames(mat) == meta$sampleID)
+all(rownames(mat) == meta$sample_id)
 ```
 
 ---
