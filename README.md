@@ -6,6 +6,8 @@ The repository is designed primarily for beginners and biologists, providing ste
 
 Topics covered include Linux basics, remote server usage, preprocessing of sequencing data, taxonomic profiling, abundance normalization, alpha and beta diversity analysis, differential abundance statistics, MetaPhlAN, HUMAnN, StrainPhlAN, and downstream interpretation workflows.
 
+![AllWorkflow](images/5day_Workflow.png)
+
 ⚠️ Note: This repository does not contain raw sequencing datasets.
 
 ## Workshop Coordinators
