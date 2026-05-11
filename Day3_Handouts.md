@@ -31,7 +31,7 @@
 
 - Running the HUMAnN pipeline (batch run)  
 - Data mining (how to obtain sequence data from previously published papers)  
-- Overview of the TRIAD databases  
+- Overview of the TRIAD databases (<=> ENA <=> NCBI <=> DDBJ <=>)
 - Downloading publicly available data from ENA  
 
 ---
