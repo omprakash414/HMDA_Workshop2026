@@ -6,6 +6,7 @@ This practical covers Whole Genome Shotgun (WGS) metagenomics analysis including
 
 ## Workflow Overview
 
+![Workflow3](images/workflow_day3.png)
 
 Raw WGS Reads → MetaPhlAn Taxonomic Profiling → HUMAnN Functional Profiling → Pathway and Gene Family Analysis
 
