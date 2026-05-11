@@ -371,7 +371,7 @@ Contains pathway completeness/coverage information.
 
 ---
 
-# 🔹 STEP 5: Data mining and overview of downloading the sequence data
+# 🔹 STEP 6: Data mining and overview of downloading the sequence data
 
 - This section has all manual searching and downloading of data from the database (ENA-EBI) to our server. 
 
