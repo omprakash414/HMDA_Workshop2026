@@ -16,14 +16,30 @@ Raw WGS Reads → MetaPhlAn Taxonomic Profiling → HUMAnN Functional Profiling 
 
 ### Purpose
 
-Install MetaPhlAn in a separate conda environment for taxonomic profiling of WGS metagenomic datasets.
+See the WGS sequence length and depth. Install MetaPhlAn in a separate conda environment for taxonomic profiling of WGS metagenomic datasets.
 
+
+---
+
+## See the sequence length of WGS reads and compare it with 16s sequencing reads
+
+### See the length of the WGS read
+
+```bash
+zcat SRR6468502_2.fastq.gz | awk 'NR==2 || NR==6 {print $0 "\nLength:", length($0), "\n"}'
+```
+
+### See the depth of sequencing (Number of total reads)
+
+```bash
+zcat SRR6468502_2.fastq.gz | echo $((`wc -l`/4))
+```
 
 ---
 
 ## Installation of MetaPhlAn 3.1.0 in separate environment
 
-### First create the environment for MetaPhlAn
+### First, create the environment for MetaPhlAn
 
 ```bash
 conda create -n metaphlan3 python=3.7.12
@@ -354,6 +370,21 @@ sample_pathcoverage.tsv
 Contains pathway completeness/coverage information.
 
 ---
+
+# 🔹 STEP 5: Data mining and overview of downloading the sequence data
+
+- This section has all manual searching and downloading of data from the database (ENA-EBI) to our server. 
+
+### Transfer the downloaded bash file (ENA) from the laptop to the server
+```bash
+scp name/of/the/bash/file/from/ENA.sh user1@192.168.17.41:
+```
+
+### Now run the bash file on server to download the samples
+
+```bash
+nohup bash name/of/the/bash/file/from/ENA.sh > download.log &
+```
 
 # 💡 Key Notes
 
