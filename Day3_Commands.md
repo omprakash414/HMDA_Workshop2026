@@ -6,7 +6,6 @@ This practical covers Whole Genome Shotgun (WGS) metagenomics analysis including
 
 ## Workflow Overview
 
-![Workflow3](images/WorkFlow_Day3.png)
 
 Raw WGS Reads → MetaPhlAn Taxonomic Profiling → HUMAnN Functional Profiling → Pathway and Gene Family Analysis
 
@@ -18,7 +17,6 @@ Raw WGS Reads → MetaPhlAn Taxonomic Profiling → HUMAnN Functional Profiling 
 
 Install MetaPhlAn in a separate conda environment for taxonomic profiling of WGS metagenomic datasets.
 
-![MetaPhlAnWorkflow](images/MetaPhlAn_Workflow.png)
 
 ---
 
@@ -54,7 +52,6 @@ conda install -c bioconda -c conda-forge metaphlan=3.1.0 -y
 
 Perform species-level taxonomic profiling of WGS metagenomic reads using MetaPhlAn.
 
-![MetaPhlAnExecution](images/MetaPhlAn_Execution.png)
 
 ---
 
@@ -126,7 +123,6 @@ rm -r bowtie2
 
 Install HUMAnN for functional profiling of microbial pathways and gene families from WGS metagenomic datasets.
 
-![HUMAnNWorkflow](images/HUMAnN_Workflow.png)
 
 ---
 
@@ -232,7 +228,6 @@ metaphlan --install --bowtie2db $CONDA_PREFIX/lib/python3.7/site-packages/metaph
 
 Perform functional profiling of microbial communities using HUMAnN.
 
-![FunctionalProfiling](images/Functional_Profiling.png)
 
 ---
 
@@ -296,11 +291,6 @@ done
 
 ---
 
-### Confirm merging completion
-
-```bash
-echo "--- Merging complete ---"
-```
 
 ---
 
