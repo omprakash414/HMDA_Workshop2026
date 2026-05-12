@@ -148,7 +148,7 @@ Install HUMAnN for functional profiling of microbial pathways and gene families 
 ### Create new environment
 
 ```bash
-conda create --name biobakery3_legacy python=3.7
+conda create --name biobakery3_legacy python=3.7 -y
 ```
 
 ---
@@ -175,10 +175,15 @@ conda config --add channels biobakery
 ### Install HUMAnN version 3.0.0 and MetaPhlAn 3.0.1
 
 ```bash
-conda install humann=3.0.0 metaphlan=3.0.1
+python -m pip install metaphlan==3.0.1 humann==3.0.0
 ```
 
 ---
+### To navigate to the working directory
+
+```bash
+echo $CONDA_PREFIX
+```
 
 ## Requirements and Downloading Databases
 
@@ -187,23 +192,6 @@ conda install humann=3.0.0 metaphlan=3.0.1
 1. ChocoPhlAn database  
 2. UniRef90  
 3. Utility Mapping  
-
----
-
-### Define the path where databases will be downloaded
-
-```bash
-ENV_DB_PATH=$CONDA_PREFIX/lib/python3.7/site-packages/humann/data
-```
-
----
-
-### Create directories for databases
-
-```bash
-mkdir -p $ENV_DB_PATH/chocophlan
-mkdir -p $ENV_DB_PATH/uniref
-```
 
 ---
 
@@ -239,6 +227,34 @@ metaphlan --install --bowtie2db $CONDA_PREFIX/lib/python3.7/site-packages/metaph
 
 ---
 
+### Create target directories in the environment
+
+```bash
+ENV_DB_PATH=$CONDA_PREFIX/lib/python3.7/site-packages/humann/data
+mkdir -p $ENV_DB_PATH/chocophlan
+mkdir -p $ENV_DB_PATH/uniref
+mkdir -p $ENV_DB_PATH/utility_mapping
+mkdir -p $CONDA_PREFIX/lib/python3.7/site-packages/metaphlan/metaphlan_databases
+```
+
+---
+
+### Copy the transferred HUMAnN databases in the environment
+
+```bash
+rsync -avP /home/user2/human_database/humann_databases/ $CONDA_PREFIX/lib/python3.7/site-packages/humann/data/
+```
+
+---
+
+### Copy the transferred MetaPhlAn databases to the environment
+
+```bash
+rsync -avP /home/user2/human_database/metaphlan_databases/ $CONDA_PREFIX/lib/python3.7/site-packages/metaphlan/metaphlan_databases/
+```
+
+---
+
 # 🔹 STEP 4: Run HUMAnN on WGS Samples
 
 ### Purpose
@@ -250,44 +266,29 @@ Perform functional profiling of microbial communities using HUMAnN.
 
 ## Run HUMAnN on Single Sample
 
-### Create folders
-
-```bash
-mkdir -p merged_fastq
-mkdir -p humann_results
-```
-
----
-
 ### Merge forward and reverse FASTQ files
 
 ```bash
-cat sample1_1.fastq.gz sample1_2.fastq.gz > merged_fastq/sample1.fastq.gz
+cat SRR6468567_1.fastq.gz SRR6468567_2.fastq.gz > merged_fastq/SRR6468567.fastq.gz
+
 ```
 
 ---
 
-### Run HUMAnN
+### Run HUMAnN (only for one sample)
 
 ```bash
-humann --input merged_fastq/sample1.fastq.gz \
-       --output humann_results \
-       --threads 16 \
-       --metaphlan-options "--bowtie2db /home/sagar/miniconda3/envs/biobakery3_legacy/lib/python3.7/site-packages/metaphlan/metaphlan_databases --index mpa_v30_CHOCOPhlAn_201901"
+humann --input merged_fastq/SRR6468567.fastq.gz \
+  --output humann_results \
+  --threads 36 \
+  --nucleotide-database $CONDA_PREFIX/lib/python3.7/site-packages/humann/data/chocophlan/chocophlan \
+  --protein-database $CONDA_PREFIX/lib/python3.7/site-packages/humann/data/uniref/uniref \
+  --metaphlan-options "--bowtie2db $CONDA_PREFIX/lib/python3.7/site-packages/metaphlan/metaphlan_databases/ --index mpa_v30_CHOCOPhlAn_201901"
 ```
 
 ---
 
 ## Batch Run HUMAnN on All Samples
-
-### Create folders
-
-```bash
-mkdir -p merged_fastq
-mkdir -p humann_results
-```
-
----
 
 ### Loop through and concatenate paired FASTQ files
 
@@ -314,18 +315,20 @@ done
 ### Run HUMAnN on merged files
 
 ```bash
-if ls merged_fastq/*.fastq.gz >/dev/null 2>&1; then
-    for input in merged_fastq/*.fastq.gz; do
-        echo "Processing $input..."
+conda activate biobakery3_legacy
 
-        humann --input "$input" \
-               --output humann_results \
-               --threads 16 \
-               --metaphlan-options "--bowtie2db /home/sagar/miniconda3/envs/biobakery3_legacy/lib/python3.7/site-packages/metaphlan/metaphlan_databases --index mpa_v30_CHOCOPhlAn_201901"
-    done
-else
-    echo "ERROR: No merged files found in merged_fastq/. Check your file names."
-fi
+mkdir -p humann_results
+
+for file in merged_fastq/*.fastq.gz; do
+    sample_name=$(basename "$file" .fastq.gz)
+    
+    humann --input "$file" \
+      --output "humann_results/${sample_name}" \
+      --threads 36 \
+      --nucleotide-database $CONDA_PREFIX/lib/python3.7/site-packages/humann/data/chocophlan/chocophlan \
+      --protein-database $CONDA_PREFIX/lib/python3.7/site-packages/humann/data/uniref/uniref \
+      --metaphlan-options "--bowtie2db $CONDA_PREFIX/lib/python3.7/site-packages/metaphlan/metaphlan_databases/ --index mpa_v30_CHOCOPhlAn_201901"
+done
 ```
 
 ---
@@ -347,7 +350,7 @@ Interpret pathway abundance, pathway coverage, and gene family outputs generated
 sample_genefamilies.tsv
 ```
 
-Contains abundance of microbial gene families.
+Contains an abundance of microbial gene families.
 
 ---
 
