@@ -323,7 +323,7 @@ for file in merged_fastq/*.fastq.gz; do
     sample_name=$(basename "$file" .fastq.gz)
     
     humann --input "$file" \
-      --output "humann_results/${sample_name}" \
+      --output humann_results \
       --threads 36 \
       --nucleotide-database $CONDA_PREFIX/lib/python3.7/site-packages/humann/data/chocophlan/chocophlan \
       --protein-database $CONDA_PREFIX/lib/python3.7/site-packages/humann/data/uniref/uniref \
