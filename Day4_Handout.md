@@ -24,9 +24,9 @@
 
 ---
 
-## 4. qwe
+## 4. Case Study using WGS dataset
 
-- Case Study using WGS dataset
+- We will use Whole Genome Sequencing (WGS) data to conduct a hands-on session based on a real case study
 
 ---
 ```
