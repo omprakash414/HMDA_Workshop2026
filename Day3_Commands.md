@@ -37,38 +37,13 @@ zcat SRR6468502_2.fastq.gz | echo $((`wc -l`/4))
 
 ---
 
-## Installation of MetaPhlAn 3.1.0 in separate environment
-
-### First, create the environment for MetaPhlAn
-
-```bash
-conda create -n metaphlan3 python=3.7.12
-```
-
----
-
-### Activate the environment
-
-```bash
-conda activate metaphlan3
-```
-
----
-
-### Install MetaPhlAn version 3.1.0
-
-```bash
-conda install -c bioconda -c conda-forge metaphlan=3.1.0 -y
-```
-
----
+## Running of Metaphlan on WGS data (In HUMAnN Environment)
 
 # 🔹 STEP 2: Executing MetaPhlAn on WGS Dataset
 
 ### Purpose
 
 Perform species-level taxonomic profiling of WGS metagenomic reads using MetaPhlAn.
-
 
 ---
 
@@ -85,7 +60,7 @@ mkdir -p bowtie2 sams
 ### Merge forward and reverse FASTQ files into single FASTQ file
 
 ```bash
-zcat sample1_1.fastq.gz sample1_2.fastq.gz > sample1.fastq
+zcat SRR6468567_1.fastq.gz SRR6468567_2.fastq.gz > SRR6468567.fastq
 ```
 
 ---
@@ -93,7 +68,7 @@ zcat sample1_1.fastq.gz sample1_2.fastq.gz > sample1.fastq
 ### Run MetaPhlAn on the merged FASTQ file
 
 ```bash
-metaphlan sample1.fastq --input_type fastq -s sams/sample1.sam.bz2 --bowtie2out bowtie2/sample1.bowtie2.bz2 --nproc 20 -o sample1_profiled.txt
+metaphlan SRR6468567.fastq --input_type fastq --nproc 30 -o S1.metaphlan.txt --bowtie2db $CONDA_PREFIX/lib/python3.7/site-packages/metaphlan/metaphlan_databases --index mpa_v30_CHOCOPhlAn_201901
 ```
 
 ---
@@ -103,7 +78,7 @@ metaphlan sample1.fastq --input_type fastq -s sams/sample1.sam.bz2 --bowtie2out 
 ### sam file is required further if you wish to run StrainPhlAn
 
 ```bash
-rm sample1.fastq
+rm SRR6468567.fastq
 ```
 
 ---
@@ -122,6 +97,8 @@ for f1 in *_1.fastq.gz; do
         --input_type fastq \
         -s "sams/${sample}.sam.bz2" \
         --bowtie2out "bowtie2/${sample}.bowtie2.bz2" \
+        --bowtie2db $CONDA_PREFIX/lib/python3.7/site-packages/metaphlan/metaphlan_databases
+        --index mpa_v30_CHOCOPhlAn_201901
         --nproc 20 \
         -o "${sample}_profiled.txt"
 
