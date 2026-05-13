@@ -26,7 +26,7 @@
 
 ## 4. qwe
 
-- Run
+- Case Study using WGS dataset
 
 ---
 ```
