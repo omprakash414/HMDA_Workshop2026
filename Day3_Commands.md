@@ -134,6 +134,22 @@ rm -r bowtie2
 
 ---
 
+## Merge the individual outputs of Metaphlan to get a species matrix
+
+```bash
+# First, create a list of all outputs in the format (exact_file_names + space + cropped_file_names)
+ls *_profiled.txt > 1
+ls *_profiled.txt | sed 's/_profiled.txt//g' > 2
+
+paste 1 2 > all_metaphlan_files.txt
+
+# Now merge all outputs
+perl create_metaphlan_species_matrix.pl all_metaphlan_files.txt merged_species_profile.txt
+
+```
+
+---
+
 # 🔹 STEP 3: HUMAnN Tool Installation (Version 3.0.0) and Execution
 
 ### Purpose
