@@ -210,6 +210,206 @@ scp "sagar@192.168.3.254:~/human_outputs/normalized_tables/*.tsv" ~/Desktop/Meta
 
 
 
+## 🔹 Data Visualization and Statistical Analysis in R
+
+Once your data is downloaded to your local machine, use the following R scripts to generate plots.
+
+### 1. Data Loading and Cleaning
+First, set your working directory and load both the pathway and gene family matrices. We filter out species-specific reads to focus on community-level profiles.
+
+```R
+# Set your working directory to where you saved the files
+
+setwd("~/Desktop/Metagenomics_Analysis")
+
+# Read the pathway abundance table (comment.char = "" prevents deleting the header row)
+
+pathway_data <- read.table("all_pathabundance_cpm.tsv", 
+                           header = TRUE, sep = "\t", row.names = 1, 
+                           comment.char = "", quote = "", check.names = FALSE)
+
+# Read the gene families table
+
+gene_data <- read.table("all_genefamilies_cpm.tsv", 
+                        header = TRUE, sep = "\t", row.names = 1, 
+                        comment.char = "", quote = "", check.names = FALSE)
+
+# Filter out species-specific rows ("|") and control rows
+
+community_pathways <- pathway_data[!grepl("\\|", rownames(pathway_data)), ]
+community_pathways <- community_pathways[!rownames(community_pathways) %in% c("UNMAPPED", "UNINTEGRATED"), ]
+
+community_genes <- gene_data[!grepl("\\|", rownames(gene_data)), ]
+community_genes <- community_genes[!rownames(community_genes) %in% c("UNMAPPED", "UNINTEGRATED"), ]
+
+
+# 2. Principal Component Analysis (PCA)
+Visualize the overall metabolic community shifts between timepoints.
+
+library(ggplot2)
+
+# PCA needs samples as rows and pathways as columns, so we transpose (t)
+
+pca_data <- as.data.frame(t(community_pathways))
+
+# Extract timepoints from sample names
+
+timepoints <- ifelse(grepl("0-week", rownames(pca_data)), "0-Week", "52-Week")
+pca_data$Timepoint <- timepoints
+
+# Run PCA (excluding the text Timepoint column)
+
+pca_result <- prcomp(pca_data[, -ncol(pca_data)], center = TRUE, scale. = TRUE)
+
+# Extract coordinates for plotting
+
+plot_data <- data.frame(
+  Sample = rownames(pca_result$x),
+  PC1 = pca_result$x[, 1],
+  PC2 = pca_result$x[, 2],
+  Timepoint = pca_data$Timepoint
+)
+
+pc1_var <- round(summary(pca_result)$importance[2, 1] * 100, 1)
+pc2_var <- round(summary(pca_result)$importance[2, 2] * 100, 1)
+
+ggplot(plot_data, aes(x = PC1, y = PC2, color = Timepoint)) +
+  geom_point(size = 4, alpha = 0.8) +
+  theme_minimal() +
+  labs(
+    title = "Metabolic Pathway PCA: 0-Week vs 52-Week",
+    x = paste0("PC1 (", pc1_var, "%)"),
+    y = paste0("PC2 (", pc2_var, "%)")
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    legend.position = "right"
+  )
+
+
+# 3. Alpha Diversity (Gene Richness)
+
+Calculate the total number of unique genes present in each sample to assess functional richness.
+
+# Calculate total unique genes per sample (value > 0)
+
+gene_richness <- colSums(community_genes > 0)
+
+# Build dataframe for plotting
+
+richness_df <- data.frame(
+  Sample = names(gene_richness),
+  Richness = gene_richness,
+  Timepoint = factor(ifelse(grepl("0-week", names(gene_richness)), "0-Week", "52-Week"), 
+                     levels = c("0-Week", "52-Week")) 
+)
+
+# Run Wilcoxon test for statistical significance
+
+stat_test <- wilcox.test(Richness ~ Timepoint, data = richness_df)
+p_value <- round(stat_test$p.value, 4)
+
+ggplot(richness_df, aes(x = Timepoint, y = Richness, fill = Timepoint)) +
+  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
+  geom_jitter(width = 0.2, size = 4, alpha = 0.8) +
+  theme_minimal() +
+  scale_fill_manual(values = c("0-Week" = "#F8766D", "52-Week" = "#00BFC4")) +
+  labs(
+    title = "Functional Alpha Diversity (Gene Richness)",
+    subtitle = paste("Wilcoxon test p-value =", p_value),
+    y = "Total Number of Unique Genes",
+    x = ""
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 15),
+    legend.position = "none",
+    axis.text.x = element_text(size = 12, face = "bold")
+  )
+
+# 4. Heatmap of Top Variable Pathways
+
+Extract the 30 most variable pathways and plot them as a heatmap.
+
+library(pheatmap)
+
+# Calculate variance and extract top 30
+
+pathway_variance <- apply(community_pathways, 1, var)
+top_30_names <- names(sort(pathway_variance, decreasing = TRUE)[1:30])
+top_pathways_data <- community_pathways[top_30_names, ]
+
+# Log10 transform to manage skewed biological data (add 1e-5 pseudocount)
+
+heatmap_data <- log10(top_pathways_data + 1e-5)
+
+# Setup color bar annotations
+
+annotation_col <- data.frame(Timepoint = factor(ifelse(grepl("0-week", colnames(heatmap_data)), "0-Week", "52-Week"), 
+                                                levels = c("0-Week", "52-Week")))
+rownames(annotation_col) <- colnames(heatmap_data)
+
+ann_colors <- list(
+  Timepoint = c("0-Week" = "#F8766D", "52-Week" = "#00BFC4")
+)
+
+# Draw the heatmap
+
+pheatmap(heatmap_data,
+         scale = "row",
+         annotation_col = annotation_col,
+         annotation_colors = ann_colors,
+         show_colnames = TRUE,
+         fontsize_row = 7,
+         fontsize_col = 8,
+         angle_col = 45,
+         main = "Top 30 Most Variable Metabolic Pathways",
+         color = colorRampPalette(c("navy", "white", "firebrick3"))(50),
+         border_color = NA
+)
+
+# 5. Volcano Plot (Biomarker Discovery)
+
+Visualize significantly enriched features using ggrepel for clear labeling.
+
+library(ggplot2)
+library(ggrepel)
+
+# Add Labels to the Results Table (assumes 'results' df is already calculated)
+results$Label <- ifelse(
+  results$Significance != "Not Significant", 
+  paste0(results$Feature, "\n(p = ", round(results$P_Value, 4), ")"), 
+  ""
+)
+
+# Plot Volcano Plot with Labels
+
+ggplot(results, aes(x = Log2FoldChange, y = -log10(P_Value), color = Significance)) +
+  geom_point(alpha = 0.7, size = 3) +
+  geom_text_repel(aes(label = Label), 
+                  size = 3.5, 
+                  color = "black", 
+                  box.padding = 0.8, 
+                  show.legend = FALSE) +  
+  scale_color_manual(values = c("Enriched in 52-Week" = "#00BFC4", 
+                                "Not Significant" = "grey80", 
+                                "Enriched in 0-Week" = "#F8766D")) +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "black", alpha = 0.5) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "black", alpha = 0.5) +
+  theme_minimal() +
+  labs(
+    title = "Biomarker Discovery: Volcano Plot",
+    subtitle = "Significant pathways labeled with names and p-values",
+    x = "Log2 Fold Change (Effect Size)",
+    y = "-Log10 P-Value (Statistical Significance)"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 15),
+    legend.title = element_blank(),
+    legend.position = "bottom"
+  )
+
+
+
 
 
 ---
