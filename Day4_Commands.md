@@ -1,7 +1,7 @@
 # Day 4 Commands
 ### STEP 1: Join Individual Sample Tables
 ### Create a folder to hold the merged files
-...bash
+
 mkdir -p combined_tables
 
 # Join all gene families files into one matrix
