@@ -164,14 +164,10 @@ done
 ## 🔹 Session 2: Functional ?????
 
 
----
-
-## 🔹 Session 3: Human Microbiome Databases
-
 
 ---
 
-## 🔹 Session 4: Case Study
+## 🔹 Session 3: Case Study
 
 We will use Whole Genome Sequencing (WGS) data to conduct a hands-on session based on a real case study.
 
