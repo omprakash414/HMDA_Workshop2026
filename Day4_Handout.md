@@ -12,19 +12,18 @@
 
 ---
 
-## 2. qwe
+## 2. Interpretation of HUMAnN outputs
 
-- point1
+- Joining of the outputs
+- Re-Normalize the data (to CPM)
+- Pathway analysis
+- Microbial community shift
+- Biomarker discovery
+
 
 ---
 
-## 3. qwe
-
-- Introductio
-
----
-
-## 4. Case Study using WGS dataset
+## 3. Case Study using WGS dataset
 
 - We will use Whole Genome Sequencing (WGS) data to conduct a hands-on session based on a real case study
 
