@@ -406,14 +406,11 @@ ggplot(results, aes(x = Log2FoldChange, y = -log10(P_Value), color = Significanc
     legend.title = element_blank(),
     legend.position = "bottom"
   )
-
-
-
+```
 
 
 ---
 
----
 ## 🔹 Session 3: Case Study
 
 We will use Whole Genome Sequencing (WGS) data to conduct a hands-on session based on a real case study.
