@@ -161,7 +161,6 @@ done
 
 
 ---
-## 🔹 Session 2: Functional Analysis
 
 ## 🔹 Session 2: HUMAnN Output Processing and Data Transfer
 
@@ -414,7 +413,7 @@ ggplot(results, aes(x = Log2FoldChange, y = -log10(P_Value), color = Significanc
 
 ---
 
-
+---
 ## 🔹 Session 3: Case Study
 
 We will use Whole Genome Sequencing (WGS) data to conduct a hands-on session based on a real case study.
