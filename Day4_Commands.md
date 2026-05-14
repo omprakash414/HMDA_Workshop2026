@@ -381,13 +381,64 @@ results$Label <- ifelse(
 )
 
 # Plot Volcano Plot with Labels
+# ==========================================
+# STEP 5: Volcano Plot (Biomarker Discovery)
+# ==========================================
 
+
+library(ggplot2)
+library(ggrepel)
+
+# --- A. CALCULATE STATISTICS (Build the 'results' table) ---
+
+# Add a tiny pseudocount to prevent math errors (division by zero)
+data_matrix <- community_pathways + 1e-5 
+
+# Split the data into our two groups based on the timepoints we defined earlier
+group_0week <- data_matrix[, timepoints == "0-Week"]
+group_52week <- data_matrix[, timepoints == "52-Week"]
+
+# Create an empty table to store our statistical results
+results <- data.frame(
+  Feature = rownames(data_matrix),
+  Log2FoldChange = numeric(nrow(data_matrix)),
+  P_Value = numeric(nrow(data_matrix))
+)
+
+# Loop through every pathway and calculate the differences
+for(i in 1:nrow(data_matrix)) {
+  mean_0w <- mean(as.numeric(group_0week[i, ]))
+  mean_52w <- mean(as.numeric(group_52week[i, ]))
+  
+  # Calculate Log2 Fold Change
+  results$Log2FoldChange[i] <- log2(mean_52w / mean_0w)
+  
+  # Run a Wilcoxon Test
+  results$P_Value[i] <- wilcox.test(as.numeric(group_52week[i, ]), as.numeric(group_0week[i, ]))$p.value
+}
+
+# Flag biomarkers with P < 0.05 AND a Fold Change greater than 2x (Log2FC > 1 or < -1)
+results$Significance <- "Not Significant"
+results$Significance[results$P_Value < 0.05 & results$Log2FoldChange > 1] <- "Enriched in 52-Week"
+results$Significance[results$P_Value < 0.05 & results$Log2FoldChange < -1] <- "Enriched in 0-Week"
+
+# --- B. PLOT THE DATA ---
+
+# Add Labels to the Results Table for significant points
+results$Label <- ifelse(
+  results$Significance != "Not Significant", 
+  paste0(results$Feature, "\n(p = ", round(results$P_Value, 4), ")"), 
+  ""
+)
+
+# Draw the Volcano Plot
 ggplot(results, aes(x = Log2FoldChange, y = -log10(P_Value), color = Significance)) +
   geom_point(alpha = 0.7, size = 3) +
   geom_text_repel(aes(label = Label), 
                   size = 3.5, 
                   color = "black", 
                   box.padding = 0.8, 
+                  max.overlaps = 50,
                   show.legend = FALSE) +  
   scale_color_manual(values = c("Enriched in 52-Week" = "#00BFC4", 
                                 "Not Significant" = "grey80", 
