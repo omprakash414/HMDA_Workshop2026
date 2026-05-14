@@ -161,11 +161,13 @@ done
 
 
 ---
-## 🔹 Session 2: Functional 
+## 🔹 Session 2: Functional Analysis
 
-## 🔹 Session 2: HUMAnN Output Processing 
+## 🔹 Session 2: HUMAnN Output Processing and Data Transfer
 
 ### 1. Join Individual Sample Tables
+Create a folder to hold the merged files, then join all gene families, pathway abundance, and pathway coverage files into their respective master matrices.
+
 ```bash
 mkdir -p combined_tables
 
@@ -177,6 +179,10 @@ humann_join_tables -i . -o combined_tables/all_pathabundance.tsv --file_name pat
 
 # Join all pathway coverage files into one matrix
 humann_join_tables -i . -o combined_tables/all_pathcoverage.tsv --file_name pathcoverage
+
+# 2. Renormalize the Data (to Copies Per Million)
+
+Create a folder for the normalized data, and renormalize the gene families and pathway abundance tables to CPM (Copies Per Million) to allow for fair sample comparisons.
 
 mkdir -p normalized_tables
 
@@ -190,11 +196,19 @@ humann_renorm_table -i combined_tables/all_pathabundance.tsv \
                     -o normalized_tables/all_pathabundance_cpm.tsv \
                     --units cpm --update-snames
 
+3. Transfer Data to Local Machine
+
+Note: Run these commands on your local personal computer's terminal, not the server.
+
+Open a new terminal on your personal computer, create a folder for your project, and securely copy (scp) the normalized files from the server to your local machine.
+
 # Create a folder for your project locally
 mkdir -p ~/Desktop/Metagenomics_Analysis
 
 # Securely copy the normalized tables to your local machine
 scp "sagar@192.168.3.254:~/human_outputs/normalized_tables/*.tsv" ~/Desktop/Metagenomics_Analysis/
+
+
 
 
 
