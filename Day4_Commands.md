@@ -1,26 +1,26 @@
 # Day 4 Commands
 ### STEP 1: Join Individual Sample Tables
 ### Create a folder to hold the merged files
-
+```bash
 mkdir -p combined_tables
 
-# Join all gene families files into one matrix
+### Join all gene families files into one matrix
 humann_join_tables -i . -o combined_tables/all_genefamilies.tsv --file_name genefamilies
 
-# Join all pathway abundance files into one matrix
+### Join all pathway abundance files into one matrix
 humann_join_tables -i . -o combined_tables/all_pathabundance.tsv --file_name pathabundance
 
-# STEP 2: Renormalize the Data (to Copies Per Million)
+### STEP 2: Renormalize the Data (to Copies Per Million)
 
-# Create a folder for the normalized data
+### Create a folder for the normalized data
 mkdir -p normalized_tables
 
-# Renormalize the gene families table
+### Renormalize the gene families table
 humann_renorm_table -i combined_tables/all_genefamilies.tsv \
                     -o normalized_tables/all_genefamilies_cpm.tsv \
                     --units cpm --update-snames
 
-# Renormalize the pathway abundance table
+### Renormalize the pathway abundance table
 humann_renorm_table -i combined_tables/all_pathabundance.tsv \
                     -o normalized_tables/all_pathabundance_cpm.tsv \
                     --units cpm --update-snames
@@ -28,12 +28,12 @@ humann_renorm_table -i combined_tables/all_pathabundance.tsv \
 
 
 
-# Join all pathway coverage files into one matrix
+### Join all pathway coverage files into one matrix
 humann_join_tables -i . -o combined_tables/all_pathcoverage.tsv --file_name pathcoverage
 
  1. Open a new terminal on your personal computer
 
-# 2. Create a folder for your project 
+### 2. Create a folder for your project 
  mkdir -p ~/Desktop/Metagenomics_Analysis
 
 scp "sagar@192.168.3.254:~/human_outputs/normalized_tables/*.tsv" ~/Desktop/Metagenomics_Analysis/
