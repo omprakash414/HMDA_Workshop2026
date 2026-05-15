@@ -1,4 +1,4 @@
-# Day 1 Handout
+# Day 5 Handout
 
 ## 1. Human Microbiome Databases exploration 
 
