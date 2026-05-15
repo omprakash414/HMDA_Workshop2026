@@ -8,6 +8,7 @@ This practical introduces the workflow for downloading metadata and species prof
 1. GMrepo (Data repository for Gut Microbiota): https://gmrepo.humangut.info/home
 2. MGnify: https://www.ebi.ac.uk/metagenomics
 3. MicrobiomeHD: https://zenodo.org/records/1146764
+4. cMD (curated Metagenomic Database): https://waldronlab.io/curatedMetagenomicData/articles/curatedMetagenomicData.html
 
 ---
 ## 🔹 STEP 2: Case Study
