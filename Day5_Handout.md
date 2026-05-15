@@ -6,7 +6,7 @@
 
 ---
 
-## 2. Case Study using WGS dataset
+## 2. Case Study using 16S dataset
 
 - We will use 16S rRNA sequencing data to conduct a hands-on session based on a real case study
 
